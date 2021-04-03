@@ -13,13 +13,13 @@ struct RwLock_<T>(std::sync::RwLock<T>);
 #[derive(Default)]
 struct TokioRwLock_<T>(tokio::sync::RwLock<T>);
 
-const ITER: usize = 10_000usize;
+const ITER: usize = 1_000usize;
 const RUNS_PER_ITER: usize = 100_000usize;
 
 #[tokio::main]
 async fn main() {
-    read().await;
-    //write().await;
+    //read().await;
+    write().await;
 }
 
 #[allow(dead_code)]
@@ -59,6 +59,7 @@ async fn read() {
         for _ in 0..RUNS_PER_ITER {
             left_right.read(|x| x.get(&5).map(|x| x.clone()) );
         }
+        left_right.commit();
         let instant_leftright = instant_leftright.elapsed().as_micros();
 
         println!("{:5} {:10} {:10} {:10} {:10} {:10}", r, instant_leftright, instant_mutex, instant_rwlock, instant_t_mutex, instant_t_rwlock);
@@ -102,6 +103,7 @@ async fn write() {
         for _ in 0..RUNS_PER_ITER {
             left_right.write(|x| { x.entry(5).and_modify(|x| *x += 1).or_insert(0); } );
         }
+        left_right.commit();
         let instant_leftright = instant_leftright.elapsed().as_micros();
 
         println!("{:5} {:10} {:10} {:10} {:10} {:10}", r, instant_leftright, instant_mutex, instant_rwlock, instant_t_mutex, instant_t_rwlock);

@@ -16,10 +16,6 @@ Currently the benchmark is only single core!
 
 At least on my server (Threadripper 1950x) this implementation is faster than all of the above in read and write.
 
-### Read
-
-![read](./assets/read.png)
-
 ### Write
 
 ![write](./assets/write.png)
